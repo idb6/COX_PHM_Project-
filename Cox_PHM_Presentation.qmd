@@ -1,0 +1,107 @@
+---
+title: "Cox Proportional Hazards Model"
+author: "Ivan Burgos, Vladimir Dragomirov"
+format: revealjs
+---
+
+## Cox Proportional Hazard Model
+
+::: incremental
+-   Developed by Sir David R Cox, a british statistician, in 1972
+
+-   Also called Cox Regression
+
+-   Used to investigate time to event data, e.g. time until patient dies, time until part malfunctions, time until decision is made, etc.
+
+-   The field of Survival Analysis works with a lot of time to event data, and makes a lot of use of the Cox Proportional Hazards Model and its extensions
+:::
+
+## Prior to Cox PH Model
+
+**Log Rank Test** - compare groups, testing a null hypothesis that there is no difference between groups. Limitations: ability to handle multiple variables, abilit to quantify a difference between groups
+
+**Kaplan-Meier Survival Curve** - very simple to implement, graphs how many are alive in each group at what time. Limitations: ability to handle more than a few varieables and any non-categorical variables, no mathematical function to describe the data, can not estimate a ratio of the hazards between groups,
+
+## Example Kaplan-Meier Survival Curve
+
+```{r}
+#| echo: false
+#import dataset
+heart_transplant <- read.csv("./heart_transplant.csv")
+
+#load neaded libraries
+library(survival)
+
+#generate numeric column for survived from character
+heart_transplant$survived2 <- as.numeric(ifelse(heart_transplant$survived=="dead",1,0))
+
+#generate kaplan meier model
+km.model <- survfit(Surv(heart_transplant$survtime,heart_transplant$survived2)~1)
+
+#plot model
+plot(km.model, conf.int=F, xlab = "Time (days)", ylab = "Percent Alive", main="Kaplan Meier Model Heart Transplant Candidatae Survival")
+```
+
+## Cox Proportional Hazards Model
+
+$h_0(t)$ is the baseline hazard - for example what is your baseline hazard (risk, chance) of dying
+
+$h(t)$ is the hazard at time t for the group of interest.
+
+This hazard $h(t)$ can be modeled as the baseline hazard times an exponential function describing the affect of the predictor variables $$
+h(t)=h_0(t) \times exp (\beta_1X_{1} + \beta_{2}X_{2} + \dots + \beta_n X_{n})
+$$
+
+## Cox Proportional Hazards Model
+
+$$ h(t)=h_0(t) \times exp (\beta_1X_{1} + \beta_{2}X_{2} + \dots + \beta_n X_{n}) $$
+
+Dividing both sides by the baseline hazard we get the hazard ratio
+
+$$
+h(t)/h_0(t)= exp (\beta_1X_{1} + \beta_{2}X_{2} + \dots + \beta_n X_{n})
+$$
+
+Taking the natural log yields a formula that has some similarity to linear regression. The log of the hazard ratio has a linear relationship to the predictor variables.
+
+$$
+ln(h(t)/h_0(t))= \beta_1X_{1} + \beta_{2}X_{2} + \dots + \beta_n X_{n}
+$$
+
+##  {.scrollable}
+
+##notes for slides
+
+-   Intro
+
+    -   Cox PH
+
+        -   maths
+
+        -   assumptions
+
+        -   limitations - extensions
+
+        -   use areas
+
+-   Methods
+
+    -   dataset
+
+    -   cleaning of data
+
+    -   Methods and results more iterative:
+
+-   Results and Discussion
+
+    -   first model
+
+    -   second model
+
+    -   third model
+
+    -   fourth model
+
+    -   fifth model
+
+-   Conclusion
